@@ -10,7 +10,9 @@ import UIKit
 
 let kCollectionViewCell = "cell"
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+    
+    var yOffset: CGFloat = 0.0
     
     let collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: {
         var flowLayout = UICollectionViewFlowLayout()
@@ -33,6 +35,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         UIImage(named: "11")!,
         UIImage(named: "12")!,
     ]
+    
+    let pan = UIPanGestureRecognizer()
+    let fullSizeImageView = UIImageView()
+    var frame = CGRectZero
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,6 +96,87 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSizeMake(collectionView.frame.width, 10.0)
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        var frame = CGRectZero
+        for cell in collectionView.visibleCells() {
+            if collectionView.indexPathForCell(cell as! UICollectionViewCell) == indexPath {
+                let cell = cell as! CollectionViewCell
+                frame = CGRectMake(
+                    cell.frame.origin.x + 10.0,
+                    cell.frame.origin.y + 20.0 - yOffset,
+                    cell.frame.width,
+                    cell.frame.height - 5.0
+                )
+                self.frame = frame
+            }
+        }
+        
+        view.addSubview({
+            self.fullSizeImageView.frame = frame
+            self.fullSizeImageView.image = self.images[indexPath.row]
+            self.fullSizeImageView.contentMode = .ScaleAspectFill
+            self.fullSizeImageView.clipsToBounds = true
+            self.fullSizeImageView.userInteractionEnabled = true
+            
+            self.fullSizeImageView.addGestureRecognizer({
+                self.pan.addTarget(self, action: "handlePan")
+                
+                return self.pan
+                }())
+
+            return self.fullSizeImageView
+            }()
+        )
+        
+        UIView.animateWithDuration(
+            0.5,
+            animations: { () -> Void in
+                self.fullSizeImageView.frame = CGRectMake(
+                    0.0,
+                    20.0,
+                    self.view.frame.width,
+                    self.view.frame.height - 20.0
+                )
+        })
+    }
+    
+    //MARK:- ScrollViewDelegate 
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        yOffset = scrollView.contentOffset.y
+    }
+    
+    func handlePan() {
+        if pan.state == .Ended {
+            UIView.animateWithDuration(
+                0.3,
+                animations: { () -> Void in
+                    if abs(self.pan.translationInView(self.view).y) >= 20.0 {
+                        self.fullSizeImageView.frame = self.frame
+                    } else {
+                        self.fullSizeImageView.frame = CGRectMake(
+                            0.0,
+                            20.0,
+                            self.view.frame.width,
+                            self.view.frame.height - 20.0
+                        )
+                    }
+                }) { finished in
+                    if abs(self.pan.translationInView(self.view).y) >= 20.0 {
+                        self.fullSizeImageView.removeFromSuperview()
+                        self.fullSizeImageView.removeGestureRecognizer(self.pan)
+                    }
+            }
+        } else {
+            fullSizeImageView.frame = CGRectMake(
+                pan.translationInView(self.view).x,
+                pan.translationInView(self.view).y + 20.0,
+                fullSizeImageView.frame.width,
+                fullSizeImageView.frame.height
+            )
+        }
     }
 }
 

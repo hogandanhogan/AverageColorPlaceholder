@@ -13,6 +13,7 @@
 		6E1890F41B533F1300EF7263 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E1890F31B533F1300EF7263 /* Images.xcassets */; };
 		6E1891031B533F1300EF7263 /* AverageColorPlaceHolderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1891021B533F1300EF7263 /* AverageColorPlaceHolderTests.swift */; };
 		6E18910D1B53400E00EF7263 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E18910C1B53400E00EF7263 /* CollectionViewCell.swift */; };
+		6E4987001B57DFBD00142ECF /* AverageColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4986FF1B57DFBD00142ECF /* AverageColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		6E1891011B533F1300EF7263 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6E1891021B533F1300EF7263 /* AverageColorPlaceHolderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AverageColorPlaceHolderTests.swift; sourceTree = "<group>"; };
 		6E18910C1B53400E00EF7263 /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		6E4986FF1B57DFBD00142ECF /* AverageColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AverageColor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,9 +79,10 @@
 		6E1890E91B533F1300EF7263 /* AverageColorPlaceHolder */ = {
 			isa = PBXGroup;
 			children = (
+				6E1890F01B533F1300EF7263 /* Main.storyboard */,
 				6E1890EC1B533F1300EF7263 /* AppDelegate.swift */,
 				6E1890EE1B533F1300EF7263 /* ViewController.swift */,
-				6E1890F01B533F1300EF7263 /* Main.storyboard */,
+				6E4986FF1B57DFBD00142ECF /* AverageColor.swift */,
 				6E18910C1B53400E00EF7263 /* CollectionViewCell.swift */,
 				6E1890F31B533F1300EF7263 /* Images.xcassets */,
 				6E1890EA1B533F1300EF7263 /* Supporting Files */,
@@ -214,6 +217,7 @@
 				6E1890EF1B533F1300EF7263 /* ViewController.swift in Sources */,
 				6E1890ED1B533F1300EF7263 /* AppDelegate.swift in Sources */,
 				6E18910D1B53400E00EF7263 /* CollectionViewCell.swift in Sources */,
+				6E4987001B57DFBD00142ECF /* AverageColor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

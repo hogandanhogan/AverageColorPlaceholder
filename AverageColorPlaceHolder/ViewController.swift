@@ -33,10 +33,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         UIImage(named: "9")!,
         UIImage(named: "10")!,
         UIImage(named: "11")!,
-        UIImage(named: "12")!,
+        UIImage(named: "12")!
     ]
     
     let pan = UIPanGestureRecognizer()
+    let alphaView = UIView(frame: CGRectZero)
     let fullSizeImageView = UIImageView()
     var frame = CGRectZero
 
@@ -52,9 +53,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             self.collectionView.delegate = self
             self.collectionView.frame = CGRectMake(
                 10.0,
-                20.0,
+                0.0,
                 self.view.bounds.width - 20.0,
-                self.view.bounds.height - 20.0
+                self.view.bounds.height
             )
             
             return self.collectionView
@@ -98,6 +99,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         return CGSizeMake(collectionView.frame.width, 10.0)
     }
     
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSizeMake(collectionView.frame.width, 5.0)
+    }
+    
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         var frame = CGRectZero
         for cell in collectionView.visibleCells() {
@@ -105,7 +110,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 let cell = cell as! CollectionViewCell
                 frame = CGRectMake(
                     cell.frame.origin.x + 10.0,
-                    cell.frame.origin.y + 20.0 - yOffset,
+                    cell.frame.origin.y - yOffset,
                     cell.frame.width,
                     cell.frame.height - 5.0
                 )
@@ -113,6 +118,21 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             }
         }
         
+        self.view.addSubview({
+            self.alphaView.backgroundColor = UIColor.blackColor()
+            self.alphaView.frame = CGRectMake(
+                0.0,
+                0.0,
+                self.view.frame.width,
+                self.view.frame.height
+            )
+
+            self.alphaView.alpha = 0.0
+            
+            return self.alphaView
+            }()
+        )
+
         view.addSubview({
             self.fullSizeImageView.frame = frame
             self.fullSizeImageView.image = self.images[indexPath.row]
@@ -135,11 +155,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             animations: { () -> Void in
                 self.fullSizeImageView.frame = CGRectMake(
                     0.0,
-                    20.0,
+                    0.0,
                     self.view.frame.width,
-                    self.view.frame.height - 20.0
+                    self.view.frame.height
                 )
-        })
+            }) { finished in
+                self.alphaView.alpha = 1.0
+        }
     }
     
     //MARK:- ScrollViewDelegate 
@@ -148,83 +170,45 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         yOffset = scrollView.contentOffset.y
     }
     
+    //MARK:- Action Handlers
+    
     func handlePan() {
         if pan.state == .Ended {
             UIView.animateWithDuration(
                 0.3,
                 animations: { () -> Void in
-                    if abs(self.pan.translationInView(self.view).y) >= 20.0 {
+                    if abs(self.pan.translationInView(self.view).y) >= 30.0 {
                         self.fullSizeImageView.frame = self.frame
+                        self.alphaView.alpha = 0.0
                     } else {
                         self.fullSizeImageView.frame = CGRectMake(
                             0.0,
-                            20.0,
+                            0.0,
                             self.view.frame.width,
-                            self.view.frame.height - 20.0
+                            self.view.frame.height
                         )
                     }
                 }) { finished in
-                    if abs(self.pan.translationInView(self.view).y) >= 20.0 {
+                    if abs(self.pan.translationInView(self.view).y) >= 30.0 {
                         self.fullSizeImageView.removeFromSuperview()
                         self.fullSizeImageView.removeGestureRecognizer(self.pan)
+                        self.alphaView.removeFromSuperview()
                     }
             }
         } else {
+            alphaView.alpha = (1200.0 - abs(pan.translationInView(self.view).y))/1200.0
             fullSizeImageView.frame = CGRectMake(
                 pan.translationInView(self.view).x,
-                pan.translationInView(self.view).y + 20.0,
+                pan.translationInView(self.view).y,
                 fullSizeImageView.frame.width,
                 fullSizeImageView.frame.height
             )
         }
     }
-}
-
-extension UIImage {
     
-    func averageColor() -> UIColor {
-        let rgba = UnsafeMutablePointer<CUnsignedChar>.alloc(4)
-        let colorSpace: CGColorSpaceRef = CGColorSpaceCreateDeviceRGB()
-        let info = CGBitmapInfo(CGImageAlphaInfo.PremultipliedLast.rawValue)
-        let context: CGContextRef = CGBitmapContextCreate(rgba, 1, 1, 8, 4, colorSpace, info)
-        
-        CGContextDrawImage(context, CGRectMake(0, 0, 1, 1), self.CGImage)
-        
-        if rgba[3] > 0 {
-            let alpha: CGFloat = CGFloat(rgba[3])/255.0
-            let multiplier: CGFloat = alpha/255.0
-            
-            return UIColor(
-                red: CGFloat(rgba[0]) * multiplier,
-                green: CGFloat(rgba[1]) * multiplier,
-                blue: CGFloat(rgba[2]) * multiplier,
-                alpha: alpha
-            )
-        } else {
-            return UIColor(
-                red: CGFloat(rgba[0])/255.0,
-                green: CGFloat(rgba[1])/255.0,
-                blue: CGFloat(rgba[2])/255.0,
-                alpha: CGFloat(rgba[3])/255.0
-            )
-        }
-    }
-}
-
-extension UIColor {
+    //MARK:- Status Bar
     
-    func image(size: CGSize = CGSizeMake(1, 1)) -> UIImage {
-        UIGraphicsBeginImageContext(size)
-        let currentContext = UIGraphicsGetCurrentContext()
-        
-        let fillRect = CGRectMake(0, 0, size.width, size.height)
-        CGContextSetFillColorWithColor(currentContext, self.CGColor)
-        
-        CGContextFillRect(currentContext, fillRect)
-        
-        let result = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return result
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
 }

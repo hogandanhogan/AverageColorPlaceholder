@@ -36,6 +36,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         UIImage(named: "12")!
     ]
     
+    var animationImages = [ UIImage ]()
+    
     let pan = UIPanGestureRecognizer()
     let alphaView = UIView(frame: CGRectZero)
     let fullSizeImageView = UIImageView()
@@ -43,6 +45,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        for i in 1...16 {
+            let image = UIImage(named: "win_\(i)")
+            animationImages.append(image!)
+        }
     
         view.addSubview({
             self.collectionView.alwaysBounceVertical = true
@@ -73,7 +80,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kCollectionViewCell, forIndexPath: indexPath) as! CollectionViewCell
-        cell.animateImage(images[indexPath.row])
+        if indexPath.row == 3 {
+            cell.animateImage(animationImages[0])
+        } else {
+            cell.animateImage(images[indexPath.row])
+        }
         
         return cell
     }
@@ -84,7 +95,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSizeMake(collectionView.frame.width/2 - 5.0, collectionView.frame.width/2 + 90.0)
+        return CGSizeMake(collectionView.frame.width/2 - 5.0, collectionView.frame.width/2 + 210.0)
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
@@ -106,7 +117,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         var frame = CGRectZero
         for cell in collectionView.visibleCells() {
-            if collectionView.indexPathForCell(cell as! UICollectionViewCell) == indexPath {
+            if collectionView.indexPathForCell(cell) == indexPath {
                 let cell = cell as! CollectionViewCell
                 frame = CGRectMake(
                     cell.frame.origin.x + 10.0,
@@ -135,7 +146,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
         view.addSubview({
             self.fullSizeImageView.frame = frame
-            self.fullSizeImageView.image = self.images[indexPath.row]
+            if indexPath.row == 3 {
+                self.fullSizeImageView.image = self.animationImages[0]
+            } else {
+                self.fullSizeImageView.image = self.images[indexPath.row]
+            }
             self.fullSizeImageView.contentMode = .ScaleAspectFill
             self.fullSizeImageView.clipsToBounds = true
             self.fullSizeImageView.userInteractionEnabled = true
@@ -168,6 +183,15 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
         yOffset = scrollView.contentOffset.y
+        
+        let offsetDelta: Int = Int(abs(round(yOffset))) / 8
+
+        for cell in collectionView.visibleCells() {
+            if collectionView.indexPathForCell(cell)!.row == 3 {
+                let cell = cell as! CollectionViewCell
+                cell.imageView.image = animationImages[offsetDelta % animationImages.count]
+            }
+        }
     }
     
     //MARK:- Action Handlers

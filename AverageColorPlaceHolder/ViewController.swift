@@ -184,7 +184,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func scrollViewDidScroll(scrollView: UIScrollView) {
         yOffset = scrollView.contentOffset.y
         
-        let offsetDelta: Int = Int(abs(round(yOffset))) / 8
+        let offsetDelta: Int = Int(abs(round(yOffset/8)))
 
         for cell in collectionView.visibleCells() {
             if collectionView.indexPathForCell(cell)!.row == 3 {

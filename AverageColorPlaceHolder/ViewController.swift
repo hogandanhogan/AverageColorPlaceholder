@@ -14,9 +14,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     var yOffset: CGFloat = 0.0
     
-    let collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: {
+    let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: {
         var flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = UICollectionViewScrollDirection.Vertical
+        flowLayout.scrollDirection = UICollectionViewScrollDirection.vertical
         return flowLayout
         }()
     )
@@ -39,9 +39,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var animationImages = [ UIImage ]()
     
     let pan = UIPanGestureRecognizer()
-    let alphaView = UIView(frame: CGRectZero)
+    let alphaView = UIView(frame: CGRect.zero)
     let fullSizeImageView = UIImageView()
-    var frame = CGRectZero
+    var frame = CGRect.zero
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,16 +53,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
         view.addSubview({
             self.collectionView.alwaysBounceVertical = true
-            self.collectionView.backgroundColor = UIColor.whiteColor()
+            self.collectionView.backgroundColor = UIColor.white
             self.collectionView.showsHorizontalScrollIndicator = false
             self.collectionView.showsVerticalScrollIndicator = false
             self.collectionView.dataSource = self
             self.collectionView.delegate = self
-            self.collectionView.frame = CGRectMake(
-                10.0,
-                0.0,
-                self.view.bounds.width - 20.0,
-                self.view.bounds.height
+            self.collectionView.frame = CGRect(
+                x: 10.0,
+                y: 0.0,
+                width: self.view.bounds.width - 20.0,
+                height: self.view.bounds.height
             )
             
             return self.collectionView
@@ -74,12 +74,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
     //MARK:- DataSource
     
-    func registerReusableViews(collectionView: UICollectionView) {
-        collectionView.registerClass(CollectionViewCell.self, forCellWithReuseIdentifier: kCollectionViewCell)
+    func registerReusableViews(_ collectionView: UICollectionView) {
+        collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: kCollectionViewCell)
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kCollectionViewCell, forIndexPath: indexPath) as! CollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCollectionViewCell, for: indexPath) as! CollectionViewCell
         if indexPath.row == 3 {
             cell.animateImage(animationImages[0])
         } else {
@@ -89,53 +89,53 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return images.count
     }
     
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSizeMake(collectionView.frame.width/2 - 5.0, collectionView.frame.width/2 + 210.0)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width/2 - 5.0, height: collectionView.frame.width/2 + 210.0)
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
         return 5.0
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
         return 10.0
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSizeMake(collectionView.frame.width, 10.0)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 10.0)
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSizeMake(collectionView.frame.width, 5.0)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 5.0)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        var frame = CGRectZero
-        for cell in collectionView.visibleCells() {
-            if collectionView.indexPathForCell(cell) == indexPath {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        var frame = CGRect.zero
+        for cell in collectionView.visibleCells {
+            if collectionView.indexPath(for: cell) == indexPath {
                 let cell = cell as! CollectionViewCell
-                frame = CGRectMake(
-                    cell.frame.origin.x + 10.0,
-                    cell.frame.origin.y - yOffset,
-                    cell.frame.width,
-                    cell.frame.height - 5.0
+                frame = CGRect(
+                    x: cell.frame.origin.x + 10.0,
+                    y: cell.frame.origin.y - yOffset,
+                    width: cell.frame.width,
+                    height: cell.frame.height - 5.0
                 )
                 self.frame = frame
             }
         }
         
         self.view.addSubview({
-            self.alphaView.backgroundColor = UIColor.blackColor()
-            self.alphaView.frame = CGRectMake(
-                0.0,
-                0.0,
-                self.view.frame.width,
-                self.view.frame.height
+            self.alphaView.backgroundColor = UIColor.black
+            self.alphaView.frame = CGRect(
+                x: 0.0,
+                y: 0.0,
+                width: self.view.frame.width,
+                height: self.view.frame.height
             )
 
             self.alphaView.alpha = 0.0
@@ -151,12 +151,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             } else {
                 self.fullSizeImageView.image = self.images[indexPath.row]
             }
-            self.fullSizeImageView.contentMode = .ScaleAspectFill
+            self.fullSizeImageView.contentMode = .scaleAspectFill
             self.fullSizeImageView.clipsToBounds = true
-            self.fullSizeImageView.userInteractionEnabled = true
+            self.fullSizeImageView.isUserInteractionEnabled = true
             
             self.fullSizeImageView.addGestureRecognizer({
-                self.pan.addTarget(self, action: "handlePan")
+                self.pan.addTarget(self, action: #selector(ViewController.handlePan))
                 
                 return self.pan
                 }())
@@ -165,29 +165,29 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             }()
         )
         
-        UIView.animateWithDuration(
-            0.5,
+        UIView.animate(
+            withDuration: 0.5,
             animations: { () -> Void in
-                self.fullSizeImageView.frame = CGRectMake(
-                    0.0,
-                    0.0,
-                    self.view.frame.width,
-                    self.view.frame.height
+                self.fullSizeImageView.frame = CGRect(
+                    x: 0.0,
+                    y: 0.0,
+                    width: self.view.frame.width,
+                    height: self.view.frame.height
                 )
-            }) { finished in
+            }, completion: { finished in
                 self.alphaView.alpha = 1.0
-        }
+        }) 
     }
     
     //MARK:- ScrollViewDelegate 
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         yOffset = scrollView.contentOffset.y
         
         let offsetDelta: Int = Int(abs(round(yOffset/8)))
 
-        for cell in collectionView.visibleCells() {
-            if collectionView.indexPathForCell(cell)!.row == 3 {
+        for cell in collectionView.visibleCells {
+            if collectionView.indexPath(for: cell)!.row == 3 {
                 let cell = cell as! CollectionViewCell
                 cell.imageView.image = animationImages[offsetDelta % animationImages.count]
             }
@@ -197,42 +197,42 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     //MARK:- Action Handlers
     
     func handlePan() {
-        if pan.state == .Ended {
-            UIView.animateWithDuration(
-                0.3,
+        if pan.state == .ended {
+            UIView.animate(
+                withDuration: 0.3,
                 animations: { () -> Void in
-                    if abs(self.pan.translationInView(self.view).y) >= 30.0 {
+                    if abs(self.pan.translation(in: self.view).y) >= 30.0 {
                         self.fullSizeImageView.frame = self.frame
                         self.alphaView.alpha = 0.0
                     } else {
-                        self.fullSizeImageView.frame = CGRectMake(
-                            0.0,
-                            0.0,
-                            self.view.frame.width,
-                            self.view.frame.height
+                        self.fullSizeImageView.frame = CGRect(
+                            x: 0.0,
+                            y: 0.0,
+                            width: self.view.frame.width,
+                            height: self.view.frame.height
                         )
                     }
-                }) { finished in
-                    if abs(self.pan.translationInView(self.view).y) >= 30.0 {
+                }, completion: { finished in
+                    if abs(self.pan.translation(in: self.view).y) >= 30.0 {
                         self.fullSizeImageView.removeFromSuperview()
                         self.fullSizeImageView.removeGestureRecognizer(self.pan)
                         self.alphaView.removeFromSuperview()
                     }
-            }
+            }) 
         } else {
-            alphaView.alpha = (1200.0 - abs(pan.translationInView(self.view).y))/1200.0
-            fullSizeImageView.frame = CGRectMake(
-                pan.translationInView(self.view).x,
-                pan.translationInView(self.view).y,
-                fullSizeImageView.frame.width,
-                fullSizeImageView.frame.height
+            alphaView.alpha = (1200.0 - abs(pan.translation(in: self.view).y))/1200.0
+            fullSizeImageView.frame = CGRect(
+                x: pan.translation(in: self.view).x,
+                y: pan.translation(in: self.view).y,
+                width: fullSizeImageView.frame.width,
+                height: fullSizeImageView.frame.height
             )
         }
     }
     
     //MARK:- Status Bar
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
 }

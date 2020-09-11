@@ -10,13 +10,13 @@ import UIKit
 
 let kCollectionViewCell = "cell"
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate {
     
     var yOffset: CGFloat = 0.0
     
     let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: {
         var flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = UICollectionViewScrollDirection.vertical
+        flowLayout.scrollDirection = UICollectionView.ScrollDirection.vertical
         return flowLayout
         }()
     )
@@ -94,15 +94,15 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width/2 - 5.0, height: collectionView.frame.width/2 + 210.0)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 5.0
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 10.0
     }
     
@@ -196,7 +196,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     //MARK:- Action Handlers
     
-    func handlePan() {
+    @objc func handlePan() {
         if pan.state == .ended {
             UIView.animate(
                 withDuration: 0.3,

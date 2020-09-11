@@ -57,7 +57,7 @@ class CollectionViewCell: UICollectionViewCell {
         UIView.animate(
             withDuration: 0.5,
             delay: 1.0,
-            options: UIViewAnimationOptions.curveLinear,
+            options: UIView.AnimationOptions.curveLinear,
             animations: { () -> Void in
             self.imageView.alpha = 1.0
         }, completion: nil)
